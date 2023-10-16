@@ -32,31 +32,20 @@ MainWidget::MainWidget(const WEnvironment &env) : WApplication(env) {
     auto grid = container->setLayout(std::make_unique<Wt::WGridLayout>());
 
     // Button which starts the separate websocket server on 8008 port.
-    startButton_ =
-        grid->addWidget(std::make_unique<WPushButton>("Start Server"), 0, 0);
-    startButton_->setStyleClass("btn-primary");
+    startButton_ = GUI::addButton(
+        std::move(grid), 0, 0, "Start Server", "btn-primary", MAIN_BTN_SIZE,
+        FontSize::XXLarge, &MainWidget::startButtonPress, this);
     startButton_->clicked().connect(startButton_, &WPushButton::disable);
-    startButton_->clicked().connect(this, &MainWidget::startButtonPress);
-    startButton_->setMargin(2);
-    startButton_->resize(WLength::Auto, MAIN_BTN_SIZE);
-    startButton_->decorationStyle().font().setSize(FontSize::XXLarge);
 
     // Button which enables the LED visualization.
-    startLedButton =
-        grid->addWidget(std::make_unique<WPushButton>("Start LEDs"), 0, 1);
-    startLedButton->setStyleClass("btn-secondary");
-    startLedButton->clicked().connect(this, &MainWidget::ledButtonPress);
-    startLedButton->setMargin(2);
-    startLedButton->resize(WLength::Auto, MAIN_BTN_SIZE);
-    startLedButton->decorationStyle().font().setSize(FontSize::XXLarge);
+    startLedButton = GUI::addButton(
+        std::move(grid), 0, 1, "Start LEDs", "btn-secondary", MAIN_BTN_SIZE,
+        FontSize::XXLarge, &MainWidget::ledButtonPress, this);
 
     // A virtual box layout to add both text and a combobox to a single grid
     // point.
     auto vbox = std::make_unique<WVBoxLayout>();
-    vbox->addWidget(std::make_unique<WText>("Select a mode:"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
+    GUI::addText(vbox, "Select a mode:");
 
     // Add a combobox with these items. This is abstracted and full
     // implementation is in guihandle.h
@@ -86,8 +75,7 @@ MainWidget::MainWidget(const WEnvironment &env) : WApplication(env) {
     // Second vbox for the different comboboxes in the hbox. Vbox is used again
     // to have text above the combobox. The text is changed in callbacks.
     auto vbox2 = std::make_unique<WVBoxLayout>();
-    modesText = vbox2->addWidget(std::make_unique<WText>("Select a device:"));
-    modesText->decorationStyle().font().setSize(FontSize::Large);
+    modesText = GUI::addText(vbox2, "Select a device:");
     vbox2->addLayout(std::move(hbox));
 
     grid->addLayout(std::move(vbox2), 1, 1);
@@ -97,33 +85,11 @@ MainWidget::MainWidget(const WEnvironment &env) : WApplication(env) {
     table->setHeaderCount(0);
     table->setWidth(Wt::WLength("100%"));
 
-    table->elementAt(0, 0)
-        ->addWidget(std::make_unique<WText>("Visualization mode"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
-    table->elementAt(1, 0)
-        ->addWidget(std::make_unique<WText>("Color mode (if it applies)"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
-    table->elementAt(2, 0)
-        ->addWidget(
-            std::make_unique<WText>("Color coefficient (if it applies)"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
-
-    table->elementAt(3, 0)
-        ->addWidget(std::make_unique<WText>("Min Decay Rate"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
-    table->elementAt(4, 0)
-        ->addWidget(std::make_unique<WText>("Max Decay Rate"))
-        ->decorationStyle()
-        .font()
-        .setSize(FontSize::Large);
+    GUI::addText(std::move(table), 0, 0, "Visualization mode");
+    GUI::addText(std::move(table), 1, 0, "Color mode (if applies)");
+    GUI::addText(std::move(table), 2, 0, "Color coefficient");
+    GUI::addText(std::move(table), 3, 0, "Min decay rate");
+    GUI::addText(std::move(table), 4, 0, "Max decay rate");
 
     // Audio visualization mode selection.
     std::vector<std::string> aItems{"Center spectrum", "Popping spectrum"};

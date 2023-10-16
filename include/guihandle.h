@@ -2,6 +2,7 @@
 #include <Wt/WGridLayout.h>
 #include <Wt/WHBoxLayout.h>
 #include <Wt/WLayout.h>
+#include <Wt/WLength.h>
 #include <Wt/WPushButton.h>
 #include <Wt/WServer.h>
 #include <Wt/WSlider.h>
@@ -71,5 +72,34 @@ Wt::WComboBox *addComboBox(const T &layout, F fun, I inst) {
     combo->decorationStyle().font().setSize(Wt::FontSize::XXLarge);
     combo->changed().connect(inst, fun);
     return combo;
+}
+
+// T is for layout, F is for function and I is for class instance.
+template <typename T, typename F, typename I>
+Wt::WPushButton *addButton(const T &layout, int x, int y, std::string text,
+                           std::string style, int size, Wt::FontSize fontSize,
+                           F fun, I inst) {
+    auto button =
+        layout->addWidget(std::make_unique<Wt::WPushButton>(text), x, y);
+    button->setStyleClass(style);
+    button->clicked().connect(inst, fun);
+    button->setMargin(2);
+    button->resize(Wt::WLength::Auto, size);
+    button->decorationStyle().font().setSize(fontSize);
+    return button;
+}
+
+template <typename T>
+Wt::WText *addText(const T &layout, std::string text) {
+    auto txt = layout->addWidget(std::make_unique<Wt::WText>(text));
+    txt->decorationStyle().font().setSize(Wt::FontSize::Large);
+    return txt;
+}
+
+template <typename T>
+Wt::WText *addText(const T &layout, int x, int y, std::string text) {
+    auto txt = layout->elementAt(x, y)->addWidget(std::make_unique<Wt::WText>(text));
+    txt->decorationStyle().font().setSize(Wt::FontSize::Large);
+    return txt;
 }
 }  // namespace GUI
