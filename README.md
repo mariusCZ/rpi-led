@@ -1,3 +1,5 @@
+# ARCHIVED, PLEASE READ
+It was decided that integrating an ESP32 toegether with LedFx+WLED was better. You can see more info [here](https://github.com/mariusCZ/ESP32-LedFx-Audio/)
 # Raspberry Pi web controlled LEDs
 ## Introduction
 This is a project that allows control of WS281x LEDs from a web page with a particular focus on wireless audio visualization. Currently, it still lacks a lot of functionality as it is a work in progress, but the audio visualization part is currently functional. The other projects that actually transmit audio data in to the RPi web server will be published soon.
